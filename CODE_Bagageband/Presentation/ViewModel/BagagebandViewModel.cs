@@ -11,41 +11,35 @@ namespace CODE_Bagageband.ViewModel
     public class BagagebandViewModel : ViewModelBase, IObserver<Bagageband>
     {
         private string _vluchtVertrokkenVanuit;
+        private int _aantalKoffers;
+        private string _naam;
+
+        public BagagebandViewModel(Bagageband band)
+        {
+            band.Subscribe(this);
+            OnNext(band);
+        }
+
+        #region properties
         public string VluchtVertrokkenVanuit
         {
             get { return _vluchtVertrokkenVanuit; }
             set { _vluchtVertrokkenVanuit = value; RaisePropertyChanged("VluchtVertrokkenVanuit"); }
         }
 
-        private int _aantalKoffers;
         public int AantalKoffers
         {
             get { return _aantalKoffers; }
             set { _aantalKoffers = value; RaisePropertyChanged("AantalKoffers"); }
         }
 
-        private string _naam;
-        private readonly IDisposable _unsubscribe;
 
         public string Naam
         {
             get { return _naam; }
             set { _naam = value; RaisePropertyChanged("Naam"); }
         }
-
-        public BagagebandViewModel(Bagageband band)
-        {
-            _unsubscribe = band.Subscribe(this);
-            OnNext(band);
-            //Update(band);
-        }
-
-        public void Update(Bagageband value)
-        {
-            VluchtVertrokkenVanuit = value.VluchtVertrokkenVanuit;
-            AantalKoffers = value.AantalKoffers;
-            Naam = value.Naam;
-        }
+        #endregion
 
         public void OnNext(Bagageband value)
         {
@@ -55,6 +49,7 @@ namespace CODE_Bagageband.ViewModel
         }
 
         #region unused
+        
         public void OnError(Exception error)
         {
             throw new NotImplementedException();

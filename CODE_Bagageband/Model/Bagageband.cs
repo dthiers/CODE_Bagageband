@@ -40,7 +40,6 @@ namespace CODE_Bagageband.Model
             _huidigeVluchtTimer.Start();
 
             Notify(this);
-            // TODO: We moeten het laten weten dat we een update hebben!
         }
 
         private void KofferVanBandGehaald(object sender, EventArgs e)
@@ -53,7 +52,6 @@ namespace CODE_Bagageband.Model
                 _huidigeVluchtTimer.Stop();
             }
             Notify(this);
-            // TODO: We moeten het laten weten dat we een update hebben!
         }
     }
 }

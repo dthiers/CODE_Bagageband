@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DPINT_Wk3_Observer.Process;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,71 +8,62 @@ using System.Threading.Tasks;
 
 namespace CODE_Bagageband.Model
 {
-    public class Aankomsthal : IObserver<Bagageband>
+    /// <summary>
+    /// Als er een bagageBand vrij komt, wil ik dat weten.
+    /// </summary>
+    public class Aankomsthal : IObserver<Bagageband>, IObserver<Vlucht>
     {
         // TODO: Hier een ObservableCollection van maken, dan weten we wanneer er vluchten bij de wachtrij bij komen of afgaan.
-        public List<Vlucht> WachtendeVluchten { get; private set; }
+        public ObservableCollection<Vlucht> WachtendeVluchten { get; private set; }
         public List<Bagageband> Bagagebanden { get; private set; }
 
         public Aankomsthal()
         {
-            WachtendeVluchten = new List<Vlucht>();
+            WachtendeVluchten = new ObservableCollection<Vlucht>();
             Bagagebanden = new List<Bagageband>();
 
-            // TODO: Als bagageband Observable is, gaan we subscriben op band 1 zodat we updates binnenkrijgen.
-            Bagagebanden.Add(new Bagageband("Band 1", 30));
-            // TODO: Als bagageband Observable is, gaan we subscriben op band 2 zodat we updates binnenkrijgen.
-            Bagagebanden.Add(new Bagageband("Band 2", 60));
-            // TODO: Als bagageband Observable is, gaan we subscriben op band 3 zodat we updates binnenkrijgen.
-            Bagagebanden.Add(new Bagageband("Band 3", 90));
+            CreateBagageBand("Band 1", 30);
+            CreateBagageBand("Band 2", 60);
+            CreateBagageBand("Band 3", 90);
+        }
+
+        private void CreateBagageBand(string naam, int aantalKoffersPerMinuut)
+        {
+            var band = new Bagageband(naam, aantalKoffersPerMinuut);
+            band.Subscribe(this);
+            Bagagebanden.Add(band);
         }
 
         public void NieuweInkomendeVlucht(string vertrokkenVanuit, int aantalKoffers)
         {
-            // TODO: Het proces moet straks automatisch gaan, dus als er lege banden zijn moet de vlucht niet in de wachtrij.
-            // Dan moet de vlucht meteen naar die band.
+            var vlucht = new Vlucht(vertrokkenVanuit, aantalKoffers);
+            vlucht.Subscribe(this);
 
-            // Denk bijvoorbeeld aan: Bagageband legeBand = Bagagebanden.FirstOrDefault(b => b.AantalKoffers == 0);
-
-            var hasWachtendeVluchten = WachtendeVluchten.Any();
-
-            if (hasWachtendeVluchten)
+            var legeBand = Bagagebanden.FirstOrDefault(b => b.AantalKoffers == 0);
+            if(legeBand != null)
             {
-                WachtendeVluchten.Add(new Vlucht(vertrokkenVanuit, aantalKoffers));
+                legeBand.HandelNieuweVluchtAf(vlucht);
             }
             else
             {
-                Bagageband legeBand = Bagagebanden.FirstOrDefault(b => b.AantalKoffers == 0);
-                OnNext(legeBand);
+                WachtendeVluchten.Add(vlucht);
             }
-            WachtendeVluchten.Add(new Vlucht(vertrokkenVanuit, aantalKoffers));
         }
 
 
         public void OnNext(Bagageband value)
         {
-            if(value.AantalKoffers == 0 && WachtendeVluchten.Any())
+            if (value.AantalKoffers == 0 && WachtendeVluchten.Any())
             {
-                Bagageband legeBand = value;
                 Vlucht volgendeVlucht = WachtendeVluchten.FirstOrDefault();
                 WachtendeVluchten.RemoveAt(0);
 
-                legeBand.HandelNieuweVluchtAf(volgendeVlucht);
+                value.HandelNieuweVluchtAf(volgendeVlucht);
             }
         }
-        public void WachtendeVluchtenNaarBand()
+        public void OnNext(Vlucht value)
         {
-            while(Bagagebanden.Any(bb => bb.AantalKoffers == 0) && WachtendeVluchten.Any())
-            {
-                // TODO: Straks krijgen we een update van een bagageband. Dan hoeven we alleen maar te kijken of hij leeg is.
-                // Als dat zo is kunnen we vrijwel de hele onderstaande code hergebruiken en hebben we geen while meer nodig.
-                
-                Bagageband legeBand = Bagagebanden.FirstOrDefault(bb => bb.AantalKoffers == 0);
-                Vlucht volgendeVlucht = WachtendeVluchten.FirstOrDefault();
-                WachtendeVluchten.RemoveAt(0);
-
-                legeBand.HandelNieuweVluchtAf(volgendeVlucht);
-            }
+            return;
         }
 
         #region unused
@@ -84,6 +76,7 @@ namespace CODE_Bagageband.Model
         {
             throw new NotImplementedException();
         }
+
         #endregion
     }
 }

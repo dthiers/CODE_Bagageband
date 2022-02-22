@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DPINT_Wk3_Observer.Process;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CODE_Bagageband.Model
 {
-    public class Vlucht
+    public class Vlucht : Observable<Vlucht>
     {
         public Vlucht(string vertrokkenVanuit, int aantalKoffers)
         {
@@ -21,7 +22,8 @@ namespace CODE_Bagageband.Model
             set
             {
                 _vertrokkenVanuit = value;
-            } // TODO: Kunnen we hier straks net zoiets doen als RaisePropertyChanged?
+                Notify(this);
+            }
         }
 
         private int _aantalKoffers;
@@ -31,7 +33,8 @@ namespace CODE_Bagageband.Model
             set
             {
                 _aantalKoffers = value;
-            } // TODO: Kunnen we hier straks net zoiets doen als RaisePropertyChanged?
+                Notify(this);
+            }
         }
     }
 }

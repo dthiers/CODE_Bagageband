@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CODE_Bagageband.ViewModel
 {
-    public class VluchtViewModel : ViewModelBase
+    public class VluchtViewModel : ViewModelBase, IObserver<Vlucht>
     {
         private string _vertrokkenVanuit;
         public string VertrokkenVanuit
@@ -26,15 +26,27 @@ namespace CODE_Bagageband.ViewModel
 
         public VluchtViewModel(Vlucht vlucht)
         {
-            Update(vlucht);
+            OnNext(vlucht);
             // TODO: Vlucht is straks observable, kunnen we daar niet op abonneren?
         }
 
-        public void Update(Vlucht vlucht)
+        public void OnNext(Vlucht value)
         {
-            // TODO: Dit mag natuurlijk naar de OnNext methode toe.
-            VertrokkenVanuit = vlucht.VertrokkenVanuit;
-            AantalKoffers = vlucht.AantalKoffers;
+            VertrokkenVanuit = value.VertrokkenVanuit;
+            AantalKoffers = value.AantalKoffers;
         }
+
+        
+        #region unused
+        public void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

@@ -18,11 +18,11 @@ namespace DPINT_Wk3_Observer.Process
         }
 
         #region unsubscriber
-        private struct Unsubscriber : IDisposable
+        public class Unsubscriber : IDisposable
         {
-            private Action _unsubscribe;
-            public Unsubscriber(Action unsubscribe) { _unsubscribe = unsubscribe; }
-            public void Dispose() { _unsubscribe(); }
+            private readonly Action _unsubscriber;
+            public Unsubscriber(Action unsubscribe) { _unsubscriber = unsubscribe; }
+            public void Dispose() { _unsubscriber.Invoke(); }
         }
         #endregion
 
