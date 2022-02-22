@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DPINT_Wk3_Observer.Process;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Windows.Forms;
 
 namespace CODE_Bagageband.Model
 {
-    public class Bagageband
+    public class Bagageband : Observable<Bagageband>
     {
         public string Naam { get; set; }
         private int _aantalKoffersPerMinuut;
@@ -38,6 +39,7 @@ namespace CODE_Bagageband.Model
 
             _huidigeVluchtTimer.Start();
 
+            Notify(this);
             // TODO: We moeten het laten weten dat we een update hebben!
         }
 
@@ -50,7 +52,7 @@ namespace CODE_Bagageband.Model
                 VluchtVertrokkenVanuit = null;
                 _huidigeVluchtTimer.Stop();
             }
-
+            Notify(this);
             // TODO: We moeten het laten weten dat we een update hebben!
         }
     }

@@ -18,14 +18,20 @@ namespace CODE_Bagageband.Model
         public string VertrokkenVanuit
         {
             get { return _vertrokkenVanuit; }
-            set { _vertrokkenVanuit = value; } // TODO: Kunnen we hier straks net zoiets doen als RaisePropertyChanged?
+            set
+            {
+                _vertrokkenVanuit = value;
+            } // TODO: Kunnen we hier straks net zoiets doen als RaisePropertyChanged?
         }
 
         private int _aantalKoffers;
         public int AantalKoffers
         {
             get { return _aantalKoffers; }
-            set { _aantalKoffers = value; } // TODO: Kunnen we hier straks net zoiets doen als RaisePropertyChanged?
+            set
+            {
+                _aantalKoffers = value;
+            } // TODO: Kunnen we hier straks net zoiets doen als RaisePropertyChanged?
         }
     }
 }
