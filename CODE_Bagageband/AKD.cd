@@ -22,8 +22,8 @@
       <FileName>Model\Aankomsthal.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="Bagagebanden" />
       <Property Name="WachtendeVluchten" />
+      <Property Name="Bagagebanden" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="CODE_Bagageband.Model.Bagageband">
@@ -46,16 +46,17 @@
   <Class Name="CODE_Bagageband.ViewModel.BagagebandViewModel">
     <Position X="6.5" Y="1.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAQQAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAIABAAAI=</HashCode>
+      <HashCode>AEQQAAAAAACAAAIAAAAABgAAAAAAAAAAAAAAIABAAAI=</HashCode>
       <FileName>Presentation\ViewModel\BagagebandViewModel.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="CODE_Bagageband.ViewModel.MainViewModel">
     <Position X="6" Y="5.5" Width="4.25" />
     <AssociationLine Name="Band1" Type="CODE_Bagageband.ViewModel.BagagebandViewModel" FixedToPoint="true">
       <Path>
         <Point X="7.562" Y="5.5" />
-        <Point X="7.562" Y="4.598" />
+        <Point X="7.562" Y="5.367" />
       </Path>
     </AssociationLine>
     <AssociationLine Name="WachtendeVluchten" Type="CODE_Bagageband.ViewModel.VluchtViewModel" FixedFromPoint="true" FixedToPoint="true">

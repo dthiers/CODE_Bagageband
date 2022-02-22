@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CODE_Bagageband.Model
 {
-    public class Aankomsthal
+    public class Aankomsthal : IObserver<Bagageband>
     {
         // TODO: Hier een ObservableCollection van maken, dan weten we wanneer er vluchten bij de wachtrij bij komen of afgaan.
         public List<Vlucht> WachtendeVluchten { get; private set; }
@@ -33,9 +33,32 @@ namespace CODE_Bagageband.Model
 
             // Denk bijvoorbeeld aan: Bagageband legeBand = Bagagebanden.FirstOrDefault(b => b.AantalKoffers == 0);
 
+            var hasWachtendeVluchten = WachtendeVluchten.Any();
+
+            if (hasWachtendeVluchten)
+            {
+                WachtendeVluchten.Add(new Vlucht(vertrokkenVanuit, aantalKoffers));
+            }
+            else
+            {
+                Bagageband legeBand = Bagagebanden.FirstOrDefault(b => b.AantalKoffers == 0);
+                OnNext(legeBand);
+            }
             WachtendeVluchten.Add(new Vlucht(vertrokkenVanuit, aantalKoffers));
         }
 
+
+        public void OnNext(Bagageband value)
+        {
+            if(value.AantalKoffers == 0 && WachtendeVluchten.Any())
+            {
+                Bagageband legeBand = value;
+                Vlucht volgendeVlucht = WachtendeVluchten.FirstOrDefault();
+                WachtendeVluchten.RemoveAt(0);
+
+                legeBand.HandelNieuweVluchtAf(volgendeVlucht);
+            }
+        }
         public void WachtendeVluchtenNaarBand()
         {
             while(Bagagebanden.Any(bb => bb.AantalKoffers == 0) && WachtendeVluchten.Any())
@@ -50,5 +73,17 @@ namespace CODE_Bagageband.Model
                 legeBand.HandelNieuweVluchtAf(volgendeVlucht);
             }
         }
+
+        #region unused
+        public void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }
